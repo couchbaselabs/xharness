@@ -45,6 +45,11 @@ public static class EnviromentVariables
     public const string HostPort = "NUNIT_HOSTPORT";
 
     /// <summary>
+    /// Env var that specifies the port to be used for the result streaming
+    /// </summary>
+    public const string HostStreamingPort = "HOST_STREAMING_PORT";
+
+    /// <summary>
     /// Env var used to notify the test application that the communication will be done using a tcp tunnel
     /// over the usb cable.
     /// </summary>

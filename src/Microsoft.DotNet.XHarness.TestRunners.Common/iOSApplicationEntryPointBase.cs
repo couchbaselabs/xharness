@@ -13,6 +13,7 @@ public abstract class iOSApplicationEntryPointBase : ApplicationEntryPoint
     {
         var options = ApplicationOptions.Current;
         TcpTextWriter? writer;
+        TcpTextWriter? streamer;
 
         try
         {
@@ -26,12 +27,23 @@ public abstract class iOSApplicationEntryPointBase : ApplicationEntryPoint
             writer = null; // null means we will fall back to console output
         }
 
+        try
+        {
+            streamer = TcpTextWriter.InitializeWithDirectConnection(options.HostName, options.HostStreamingPort);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Failed to initialize TCP writer for results. Results will not be streamed." + Environment.NewLine + ex);
+            streamer = null;
+        }
+
         using (writer)
+        using (streamer)
         {
             var logger = (writer == null || options.EnableXml) ? new LogWriter(Device) : new LogWriter(Device, writer);
             logger.MinimumLogLevel = MinimumLogLevel.Info;
 
-            await InternalRunAsync(options, writer, writer);
+            await InternalRunAsync(options, writer, writer, streamer);
         }
     }
 }

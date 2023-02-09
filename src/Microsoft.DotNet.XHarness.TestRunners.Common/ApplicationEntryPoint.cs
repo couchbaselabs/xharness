@@ -76,7 +76,7 @@ public abstract class ApplicationEntryPoint
     /// <summary>
     /// Returns the runner to be used.
     /// </summary>
-    protected abstract TestRunner GetTestRunner(LogWriter logWriter);
+    protected abstract TestRunner GetTestRunner(LogWriter logWriter, TextWriter? resultsStreaming);
 
     protected abstract bool IsXunit { get; }
 
@@ -192,10 +192,10 @@ public abstract class ApplicationEntryPoint
         }
     }
 
-    private async Task<TestRunner> InternalRunAsync(LogWriter logger)
+    private async Task<TestRunner> InternalRunAsync(LogWriter logger, TextWriter? resultsStreaming)
     {
         logger.MinimumLogLevel = MinimumLogLevel;
-        var runner = GetTestRunner(logger);
+        var runner = GetTestRunner(logger, resultsStreaming);
         runner.LogExcludedTests = LogExcludedTests;
         // connect to the runner events so that we fwd them to the client
         runner.TestStarted += OnTestStarted;
@@ -218,14 +218,14 @@ public abstract class ApplicationEntryPoint
         return runner;
     }
 
-    protected async Task<TestRunner> InternalRunAsync(ApplicationOptions options, TextWriter? loggerWriter, TextWriter? resultsFile)
+    protected async Task<TestRunner> InternalRunAsync(ApplicationOptions options, TextWriter? loggerWriter, TextWriter? resultsFile, TextWriter? resultsStreaming)
     {
         // we generate the logs in two different ways depending if the generate xml flag was
         // provided. If it was, we will write the xml file to the provided writer if present, else
         // we will write the normal console output using the LogWriter
         var logger = (loggerWriter == null || options.EnableXml) ? new LogWriter(Device) : new LogWriter(Device, loggerWriter);
         logger.MinimumLogLevel = MinimumLogLevel.Info;
-        var runner = await InternalRunAsync(logger);
+        var runner = await InternalRunAsync(logger, resultsStreaming);
 
         WriteResults(runner, options, logger, resultsFile ?? Console.Out);
 

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.DotNet.XHarness.TestRunners.Common;
 
@@ -13,7 +14,7 @@ public abstract class XunitTestRunnerBase : TestRunner
 {
     private protected XUnitFiltersCollection _filters = new();
 
-    protected XunitTestRunnerBase(LogWriter logger) : base(logger)
+    protected XunitTestRunnerBase(LogWriter logger, TextWriter? resultsStreaming) : base(logger, resultsStreaming)
     {
     }
 

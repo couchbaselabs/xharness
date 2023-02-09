@@ -99,14 +99,17 @@ public abstract class TestRunner
     /// </summary>
     protected LogWriter Logger { get; }
 
+    protected TextWriter ResultStreamer { get; }
+
     /// <summary>
     /// Name of the file that will be used to write the results.
     /// </summary>
     protected abstract string ResultsFileName { get; set; }
 
-    protected TestRunner(LogWriter logger)
+    protected TestRunner(LogWriter logger, TextWriter resultsStreaming)
     {
         Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ResultStreamer = resultsStreaming;
     }
 
     public abstract Task Run(IEnumerable<TestAssemblyInfo> testAssemblies);
@@ -129,10 +132,12 @@ public abstract class TestRunner
 
     protected void OnAssemblyStart(Assembly asm)
     {
+        ResultStreamer?.WriteLine($"Beginning assembly {asm.FullName}");
     }
 
     protected void OnAssemblyFinish(Assembly asm)
     {
+        ResultStreamer?.WriteLine($"Finished assembly {asm.FullName}");
     }
 
     protected void LogFailureSummary()
@@ -171,7 +176,15 @@ public abstract class TestRunner
         return Path.Combine(resultsPath, ResultsFileName);
     }
 
-    protected virtual void OnTestStarted(string testName) => TestStarted?.Invoke(this, testName);
+    protected virtual void OnTestStarted(string testName)
+    {
+        ResultStreamer?.WriteLine($"Starting test '{testName}'");
+        TestStarted?.Invoke(this, testName);
+    }
 
-    protected virtual void OnTestCompleted((string TestName, TestResult TestResult) result) => TestCompleted?.Invoke(this, result);
+    protected virtual void OnTestCompleted((string TestName, TestResult TestResult) result)
+    {
+        ResultStreamer?.WriteLine($"[{result.TestResult}] '{result.TestName}'");
+        TestCompleted?.Invoke(this, result);
+    }
 }

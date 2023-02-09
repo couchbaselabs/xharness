@@ -38,7 +38,7 @@ internal class XUnitTestRunner : XunitTestRunnerBase
     public AppDomainSupport AppDomainSupport { get; set; } = AppDomainSupport.Denied;
     protected override string ResultsFileName { get; set; } = "TestResults.xUnit.xml";
 
-    public XUnitTestRunner(LogWriter logger) : base(logger)
+    public XUnitTestRunner(LogWriter logger, TextWriter? resultsStreaming) : base(logger, resultsStreaming)
     {
         _messageSink = new TestMessageSink();
 

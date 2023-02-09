@@ -17,7 +17,7 @@ public abstract class WasmApplicationEntryPointBase : ApplicationEntryPoint
     public override async Task RunAsync()
     {
         var options = ApplicationOptions.Current;
-        var runner = await InternalRunAsync(options, null, Console.Out);
+        var runner = await InternalRunAsync(options, null, Console.Out, null);
 
         LastRunHadFailedTests = runner.FailedTests != 0;
     }

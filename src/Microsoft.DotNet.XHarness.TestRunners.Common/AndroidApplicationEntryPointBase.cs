@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -26,7 +27,19 @@ public abstract class AndroidApplicationEntryPointBase : ApplicationEntryPoint
     public override async Task RunAsync()
     {
         var options = ApplicationOptions.Current;
+        TcpTextWriter? streamer;
+
+        try
+        {
+            streamer = TcpTextWriter.InitializeWithDirectConnection(options.HostName, options.HostStreamingPort);
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine("Failed to initialize TCP writer for results. Results will not be streamed." + Environment.NewLine + ex);
+            streamer = null;
+        }
+
         using TextWriter? resultsFileMaybe = options.EnableXml ? File.CreateText(TestsResultsFinalPath) : null;
-        await InternalRunAsync(options, Logger, resultsFileMaybe);
+        await InternalRunAsync(options, Logger, resultsFileMaybe, streamer);
     }
 }

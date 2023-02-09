@@ -19,7 +19,7 @@ namespace Microsoft.DotNet.XHarness.TestRunners.Xunit;
 
 internal class ThreadlessXunitTestRunner : XunitTestRunnerBase
 {
-    public ThreadlessXunitTestRunner(LogWriter logger, bool oneLineResults = false) : base(logger)
+    public ThreadlessXunitTestRunner(LogWriter logger, bool oneLineResults = false) : base(logger, null)
     {
         _oneLineResults = oneLineResults;
     }

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.TestRunners.Common;
@@ -22,7 +23,7 @@ public abstract class WasmApplicationEntryPoint : WasmApplicationEntryPointBase
 
     protected override bool IsXunit => true;
 
-    protected override TestRunner GetTestRunner(LogWriter logWriter)
+    protected override TestRunner GetTestRunner(LogWriter logWriter, TextWriter? resultsStreaming)
     {
         var runner = new ThreadlessXunitTestRunner(logWriter, true);
         ConfigureRunnerFilters(runner, ApplicationOptions.Current);

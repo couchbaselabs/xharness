@@ -94,9 +94,9 @@ public class DefaultAndroidEntryPoint : AndroidApplicationEntryPoint
         }
     }
 
-    protected override TestRunner GetTestRunner(LogWriter logWriter)
+    protected override TestRunner GetTestRunner(LogWriter logWriter, TextWriter? resultsStreaming)
     {
-        var testRunner = base.GetTestRunner(logWriter);
+        var testRunner = base.GetTestRunner(logWriter, resultsStreaming);
 
         (string? Filter, Action<string, bool> FilterMethod, bool IsExcluded)[] filters =
         {

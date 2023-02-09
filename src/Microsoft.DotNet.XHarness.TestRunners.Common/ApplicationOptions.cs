@@ -44,6 +44,11 @@ public class ApplicationOptions
             HostPort = i;
         }
 
+        if(int.TryParse(Environment.GetEnvironmentVariable(EnviromentVariables.HostStreamingPort), out i))
+        {
+            HostStreamingPort = i;
+        }
+
         if (bool.TryParse(Environment.GetEnvironmentVariable(EnviromentVariables.EnableXmlOutput), out b))
         {
             EnableXml = b;
@@ -86,6 +91,7 @@ public class ApplicationOptions
                 { "autostart", "If the app should automatically start running the tests", v => AutoStart = true },
                 { "hostname=", "Comma-separated list of host names or IP address to (try to) connect to", v => HostName = v },
                 { "hostport=", "HTTP/TCP port to connect to", v => HostPort = int.Parse (v) },
+                { "hoststreamingport=", "HTTP/TCP port to connect to stream test results", v => HostStreamingPort = int.Parse(v) },
                 { "tcp-tunnel", "Use a TCP tunnel for communication between the app and XHarness", v => UseTunnel = true },
                 { "enablexml", "Enable the xml reported", v => EnableXml = false },
                 { "xmlversion", "The XML format", v => XmlVersion = (XmlResultJargon) Enum.Parse (typeof (XmlResultJargon), v, false) },
@@ -154,6 +160,11 @@ public class ApplicationOptions
     /// The port of the host that has the device plugged.
     /// </summary>
     public int HostPort { get; private set; }
+
+    /// <summary>
+    /// The host port that is used to stream test results
+    /// </summary>
+    public int HostStreamingPort { get; private set; }
 
     /// <summary>
     /// Specify is the application should exit once the tests are completed.

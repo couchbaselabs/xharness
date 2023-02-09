@@ -22,7 +22,7 @@ internal class NUnitTestRunner : TestRunner, INUnitTestRunner
     private ResultSummary? _results;
     private bool _runAssemblyByDefault;
 
-    public NUnitTestRunner(LogWriter logger) : base(logger)
+    public NUnitTestRunner(LogWriter logger, TextWriter? resultsStreaming) : base(logger, resultsStreaming)
     {
         _testListener = new NUnitTestListener(this, logger);
         _testFilterBuilder = new FilterBuilder(new TestFilterBuilder());
